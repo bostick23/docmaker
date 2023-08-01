@@ -9,12 +9,16 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Button x:Name="BtTakeScreenshot" Click="BtTakeScreenshot_Click" Grid.Row="0" Grid.Column="0">Capture</Button>
-        <Button x:Name="BtStopScreenshot" Click="BtStopScreenshot_Click" Grid.Row="0" Grid.Column="1">Stop</Button>
+        <Button
+            x:Name="BtStartStop" 
+            Click="BtStartStop_Click"
+            Grid.Row="0" 
+            Grid.Column="0" 
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center">Capture</Button>
     </Grid>
 </Window>

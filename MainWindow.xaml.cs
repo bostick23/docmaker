@@ -17,6 +17,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -32,12 +33,14 @@ namespace DocMaker
     {
         private IKeyboardMouseEvents m_GlobalHook;
         public readonly string TEMP_PATH;
+        public bool IsRecording;
         public MainWindow()
         {
             InitializeComponent();
             TEMP_PATH = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DocMaker");
             if (!Directory.Exists(TEMP_PATH))
                 Directory.CreateDirectory(TEMP_PATH);
+            IsRecording = false;
 
         }
         public void Subscribe()
@@ -75,23 +78,6 @@ namespace DocMaker
             bmp.Save(System.IO.Path.Combine(TEMP_PATH, filename));
             Opacity = 1;
         }
-
-        private void BtTakeScreenshot_Click(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-            Subscribe();
-        }
-
-        private void BtStopScreenshot_Click(object sender, RoutedEventArgs e)
-        {
-            m_GlobalHook.Dispose();
-            string wordFileName = new WordHelper(TEMP_PATH).CreateAndInsertAllPictures();
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Documento di Word (*.docx)|*.docx";
-            if (saveFileDialog.ShowDialog() == true)
-                File.Move(wordFileName, saveFileDialog.FileName);
-            OpenWithDefaultProgram(saveFileDialog.FileName);
-        }
         public static void OpenWithDefaultProgram(string path)
         {
             using Process fileopener = new Process();
@@ -99,6 +85,29 @@ namespace DocMaker
             fileopener.StartInfo.FileName = "explorer";
             fileopener.StartInfo.Arguments = "\"" + path + "\"";
             fileopener.Start();
+        }
+
+        private void BtStartStop_Click(object sender, RoutedEventArgs e)
+        {
+            if (!IsRecording)
+            {
+                IsRecording = true;
+                BtStartStop.Content = "Stop";
+                this.WindowState = WindowState.Minimized;
+                Subscribe();
+            }
+            else
+            {
+                IsRecording = false;
+                BtStartStop.Content = "Start";
+                m_GlobalHook.Dispose();
+                string wordFileName = new WordHelper(TEMP_PATH).CreateAndInsertAllPictures();
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Documento di Word (*.docx)|*.docx";
+                if (saveFileDialog.ShowDialog() == true)
+                    File.Move(wordFileName, saveFileDialog.FileName);
+                OpenWithDefaultProgram(saveFileDialog.FileName);
+            }
         }
     }
 }
