@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocMaker"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="DocMaker" Height="450" Width="800">
+    <Grid Background="#eff4f9">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -19,6 +19,9 @@
             Grid.Row="0" 
             Grid.Column="0" 
             VerticalAlignment="Center"
-            HorizontalAlignment="Center">Capture</Button>
+            HorizontalAlignment="Center"
+            Background="#1975c5"
+            Foreground="White"
+            Padding="10,10,10,10">Capture</Button>
     </Grid>
 </Window>

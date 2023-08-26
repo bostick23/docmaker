@@ -104,9 +104,36 @@ namespace DocMaker
                 string wordFileName = new WordHelper(TEMP_PATH).CreateAndInsertAllPictures();
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Documento di Word (*.docx)|*.docx";
-                if (saveFileDialog.ShowDialog() == true)
-                    File.Move(wordFileName, saveFileDialog.FileName);
-                OpenWithDefaultProgram(saveFileDialog.FileName);
+                bool fileSaved = false, continueLoop = true;
+                while (continueLoop)
+                {
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        if (File.Exists(saveFileDialog.FileName))
+                        {
+                            try
+                            {
+                                File.Delete(saveFileDialog.FileName);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("File opened by another program. Unable to proceed",
+                                    "Save file",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
+                                continue;
+                            }
+                        }
+
+                        File.Move(wordFileName, saveFileDialog.FileName);
+                        fileSaved = true;
+                        continueLoop = false;
+                    }
+                    else
+                        continueLoop = false;
+                }
+                if (fileSaved)
+                    OpenWithDefaultProgram(saveFileDialog.FileName);
             }
         }
     }
