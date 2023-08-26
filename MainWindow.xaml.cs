@@ -1,28 +1,11 @@
 ﻿using DocMaker.Helpers;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Vml.Office;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Gma.System.MouseKeyHook;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DocMaker
 {
@@ -58,10 +41,11 @@ namespace DocMaker
 
         protected void CaptureScreen(System.Drawing.Point point)
         {
+            System.Drawing.Rectangle resolution = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
             double screenLeft = 0;
             double screenTop = 0;
-            double screenWidth = 1920;
-            double screenHeight = 1080;
+            double screenWidth = resolution.Width;
+            double screenHeight = resolution.Height;
 
             using Bitmap bmp = new Bitmap((int)screenWidth, (int)screenHeight);
             using Graphics g = Graphics.FromImage(bmp);
