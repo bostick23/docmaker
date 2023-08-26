@@ -34,7 +34,7 @@ namespace DocMaker.Helpers
                 string[] files = Directory.GetFiles(FILE_PATH, $"ScreenCapture*.png");
                 if (files != null && files.Length > 0)
                 {
-                    for (int i = 0; i < files.Length; i++)
+                    for (int i = 0; i < files.Length - 1; i++)
                     {
                         var img = new BitmapImage();
                         using (var fs = new FileStream(files[i], FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -69,6 +69,7 @@ namespace DocMaker.Helpers
                         AddImageToBody(wordDocument, mainPart.GetIdOfPart(imagePart), widthEmus, heightEmus);
                         File.Delete(files[i]);
                     }
+                    File.Delete(files[files.Length - 1]);
                 }
             }
             return wordFileName;
