@@ -23,5 +23,15 @@
             Background="#1975c5"
             Foreground="White"
             Padding="10,10,10,10">Capture</Button>
+        <Button
+            x:Name="BtOpenParameters"
+            Click="BtOpenParameters_Click"
+            Grid.Row="0" 
+            Grid.Column="0" 
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Center"
+            Background="#1975c5"
+            Foreground="White"
+            Padding="10,10,10,10">Parameters</Button>
     </Grid>
 </Window>

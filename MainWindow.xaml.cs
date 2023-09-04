@@ -1,6 +1,8 @@
 ﻿using DocMaker.Helpers;
+using DocMaker.Models;
 using Gma.System.MouseKeyHook;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -14,6 +16,7 @@ namespace DocMaker
     /// </summary>
     public partial class MainWindow : Window
     {
+        protected Models.Settings Settings;
         private IKeyboardMouseEvents m_GlobalHook;
         public readonly string TEMP_PATH;
         public bool IsRecording;
@@ -24,7 +27,35 @@ namespace DocMaker
             if (!Directory.Exists(TEMP_PATH))
                 Directory.CreateDirectory(TEMP_PATH);
             IsRecording = false;
+            LoadParameters();
 
+        }
+        protected void LoadParameters()
+        {
+            string filePath = Environment.ExpandEnvironmentVariables(App.SETTINGSPATH);
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    string fileContent = File.ReadAllText(filePath);
+                    Settings = JsonConvert.DeserializeObject<Models.Settings>(fileContent);
+                }
+                catch (Exception ex)
+                {
+                    //TODO fare messaggio di errori come si deve
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+            else
+            {
+                Settings = new Models.Settings
+                {
+                    BackgroundColor = System.Drawing.Color.FromArgb(50, 98, 0, 238),
+                    BorderColor = System.Drawing.Color.Red,
+                    Radius = 30,
+                    BorderWidth = 10
+                };
+            }
         }
         public void Subscribe()
         {
@@ -52,13 +83,13 @@ namespace DocMaker
             string filename = "ScreenCapture-" + DateTime.Now.ToString("ddMMyyyy-hhmmss") + ".png";
             Opacity = .0;
             g.CopyFromScreen((int)screenLeft, (int)screenTop, 0, 0, bmp.Size);
-            int radius = 30;
-            System.Drawing.Pen p = new System.Drawing.Pen(System.Drawing.Color.Red);
-            g.DrawEllipse(p, point.X - radius, point.Y - radius,
-             radius + radius, radius + radius);
-            System.Drawing.Brush brush = new SolidBrush(System.Drawing.Color.FromArgb(50, 98, 0, 238));
-            g.FillEllipse(brush, point.X - radius, point.Y - radius,
-             radius + radius, radius + radius);
+            System.Drawing.Pen p = new System.Drawing.Pen(Settings.BorderColor);
+            p.Width = (float)Settings.BorderWidth;
+            g.DrawEllipse(p, point.X - Settings.Radius, point.Y - Settings.Radius,
+             Settings.Radius + Settings.Radius, Settings.Radius + Settings.Radius);
+            System.Drawing.Brush brush = new SolidBrush(Settings.BackgroundColor);
+            g.FillEllipse(brush, point.X - Settings.Radius, point.Y - Settings.Radius,
+             Settings.Radius + Settings.Radius, Settings.Radius + Settings.Radius);
             bmp.Save(System.IO.Path.Combine(TEMP_PATH, filename));
             Opacity = 1;
         }
@@ -119,6 +150,12 @@ namespace DocMaker
                 if (fileSaved)
                     OpenWithDefaultProgram(saveFileDialog.FileName);
             }
+        }
+
+        private void BtOpenParameters_Click(object sender, RoutedEventArgs e)
+        {
+            ParametersWindow parametersWindow = new ParametersWindow(Settings);
+            parametersWindow.ShowDialog();
         }
     }
 }

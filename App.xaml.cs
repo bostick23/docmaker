@@ -13,5 +13,6 @@ namespace DocMaker
     /// </summary>
     public partial class App : Application
     {
+        public const string SETTINGSPATH = @"%USERPROFILE%\AppData\Local\DocMaker\settings.json";
     }
 }
